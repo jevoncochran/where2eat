@@ -3,10 +3,20 @@
 import { useState } from "react";
 import { categoryListData } from "@/shared/data";
 import Image from "next/image";
+import { Category } from "@/types";
 
-const CategoryList = () => {
+interface CategoryListProps {
+  onCategoryChange: (value: string) => void;
+}
+
+const CategoryList = ({ onCategoryChange }: CategoryListProps) => {
   const [categoryList, setCategoryList] = useState(categoryListData);
   const [selectedCategory, setSelectedCategory] = useState(0);
+
+  const handleOnClick = (item: Category, itemIdx: number) => {
+    setSelectedCategory(itemIdx);
+    onCategoryChange(item.value);
+  };
 
   return (
     <div>
@@ -15,7 +25,7 @@ const CategoryList = () => {
         {categoryList.map((item, index) => (
           <div
             key={item.id}
-            onClick={() => setSelectedCategory(index)}
+            onClick={() => handleOnClick(item, index)}
             className={`flex flex-col justify-center items-center bg-gray-100 p-2 m-2 rounded-lg grayscale hover:grayscale-0 cursor-pointer border-purple-400 ${
               selectedCategory === index ? "grayscale-0 border-[1px]" : null
             }`}

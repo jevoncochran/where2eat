@@ -1,8 +1,17 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 
-const RangeSelect = () => {
+interface RangeSelectProps {
+  onRadiusChange: (radius: number) => void;
+}
+
+const RangeSelect = ({ onRadiusChange }: RangeSelectProps) => {
   // This value has to be a string since the input with type range is a string
   const [radius, setRadius] = useState<string>("5");
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setRadius(e.target.value);
+    onRadiusChange(Number(e.target.value));
+  };
 
   return (
     <div className="mt-5">
@@ -13,7 +22,7 @@ const RangeSelect = () => {
         min={0}
         max={50}
         step={5}
-        onChange={(e) => setRadius(e.target.value)}
+        onChange={(e) => handleChange(e)}
         defaultValue={radius}
         className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
       />

@@ -1,4 +1,6 @@
-const categoryListData = [
+import { Category } from "@/types";
+
+const categoryListData: Category[] = [
   {
     id: 1,
     name: "Indian",
