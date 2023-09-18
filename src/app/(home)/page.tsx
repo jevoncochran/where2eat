@@ -10,6 +10,7 @@ import GoogleMapView from "@/components/home/GoogleMapView";
 import * as globalApi from "@/shared/globalApi";
 import { UserLocationContext } from "@/context/UserLocationContext";
 import BusinessList from "@/components/home/BusinessList";
+import SkeletonBusiness from "@/components/home/SkeletonBusiness";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -19,6 +20,7 @@ export default function Home() {
   const [category, setCategory] = useState<string>("");
   const [radius, setRadius] = useState<number>(2500);
   const [businesses, setBusinesses] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const { userLocation, setUserLocation } = useContext(UserLocationContext);
 
@@ -31,11 +33,13 @@ export default function Home() {
   };
 
   const getGooglePlace = () => {
+    setLoading(true);
     globalApi
       .getGooglePlace(category, radius, userLocation.lat, userLocation.lng)
       .then((res) => {
         console.log(res.data.product.results);
         setBusinesses(res.data.product.results);
+        setLoading(false);
       });
   };
 
@@ -59,7 +63,15 @@ export default function Home() {
       <div className="col-span-3">
         <GoogleMapView />
         <div className="relative md:absolute w-[90%] md:w-[71%] ml-6 md:m1-10 bottom-36 md:bottom-3">
-          <BusinessList businesses={businesses} />
+          {!loading ? (
+            <BusinessList businesses={businesses} />
+          ) : (
+            <div className="flex gap-3">
+              {[1, 2, 3, 4, 5, 6].map((item) => (
+                <SkeletonBusiness key={item} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
