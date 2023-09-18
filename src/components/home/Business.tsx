@@ -10,6 +10,7 @@ const Business = ({ business }: BusinessProps) => {
   const photoRef = business?.photos
     ? business?.photos[0].photo_reference
     : null;
+
   return (
     <div
       className="w-[195px] flex-shrink-0 p-2

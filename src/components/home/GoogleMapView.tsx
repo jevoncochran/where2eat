@@ -1,3 +1,4 @@
+import React, { useContext } from "react";
 import { UserLocationContext } from "@/context/UserLocationContext";
 import {
   LoadScript,
@@ -5,9 +6,13 @@ import {
   useJsApiLoader,
   MarkerF,
 } from "@react-google-maps/api";
-import React, { useContext } from "react";
+import Marker from "./Marker";
 
-const GoogleMapView = () => {
+interface GoogleMapViewProps {
+  businesses: any[];
+}
+
+const GoogleMapView = ({ businesses }: GoogleMapViewProps) => {
   const { userLocation, setUserLocation } = useContext(UserLocationContext);
 
   const { isLoaded } = useJsApiLoader({
@@ -41,9 +46,13 @@ const GoogleMapView = () => {
             position={userLocation}
             icon={{
               url: "/user-location.png",
+              // TODO: Fix this!!!
               scaledSize: { width: 50, height: 50 },
             }}
           />
+          {businesses.slice(0, 8).map((business, index) => (
+            <Marker key={index} business={business} />
+          ))}
         </GoogleMap>
       </LoadScript>
     </div>
