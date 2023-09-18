@@ -7,6 +7,7 @@ const nextConfig = {
   images: {
     remotePatterns: [
       { hostname: "lh3.googleusercontent.com", protocol: "https", port: "" },
+      { hostname: "maps.googleapis.com", protocol: "https", port: "" },
     ],
   },
   webpack(config) {

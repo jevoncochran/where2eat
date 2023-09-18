@@ -9,6 +9,7 @@ import RatingSelect from "@/components/home/RatingSelect";
 import GoogleMapView from "@/components/home/GoogleMapView";
 import * as globalApi from "@/shared/globalApi";
 import { UserLocationContext } from "@/context/UserLocationContext";
+import BusinessList from "@/components/home/BusinessList";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -17,7 +18,7 @@ export default function Home() {
 
   const [category, setCategory] = useState<string>("");
   const [radius, setRadius] = useState<number>(2500);
-  const [businesses, setBusinesses] = useState([]);
+  const [businesses, setBusinesses] = useState<any[]>([]);
 
   const { userLocation, setUserLocation } = useContext(UserLocationContext);
 
@@ -57,6 +58,9 @@ export default function Home() {
       </div>
       <div className="col-span-3">
         <GoogleMapView />
+        <div className="relative md:absolute w-[90%] md:w-[71%] ml-6 md:m1-10 bottom-36 md:bottom-3">
+          <BusinessList businesses={businesses} />
+        </div>
       </div>
     </div>
   );
