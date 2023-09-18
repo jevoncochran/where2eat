@@ -1,11 +1,14 @@
-import { useRef } from "react";
+import { useRef, useContext } from "react";
 import Business from "./Business";
+import { SelectedBusinessContext } from "@/context/SelectedBusinessContext";
 
 interface BusinessListProps {
   businesses: any[];
 }
 
 const BusinessList = ({ businesses }: BusinessListProps) => {
+  const { setSelectedBusiness } = useContext(SelectedBusinessContext);
+
   const elementRef = useRef<HTMLDivElement | null>(null);
 
   const slideLeft = (element: HTMLDivElement | null) => {
@@ -47,7 +50,9 @@ const BusinessList = ({ businesses }: BusinessListProps) => {
         ref={elementRef}
       >
         {businesses.map((business, idx) => (
-          <Business key={idx} business={business}></Business>
+          <div key={idx} onClick={() => setSelectedBusiness(business)}>
+            <Business business={business}></Business>
+          </div>
         ))}
       </div>
       <svg

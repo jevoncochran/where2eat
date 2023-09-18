@@ -7,6 +7,7 @@ import { Inter, Raleway } from "next/font/google";
 import SessionProvider from "./SessionProvider";
 import HeaderNavBar from "@/components/HeaderNavBar";
 import { UserLocationContext } from "@/context/UserLocationContext";
+import { SelectedBusinessContext } from "@/context/SelectedBusinessContext";
 
 const raleway = Raleway({ subsets: ["latin"] });
 
@@ -21,6 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const [userLocation, setUserLocation] = useState({});
+  const [selectedBusiness, setSelectedBusiness] = useState<any>(null);
 
   const getUserLocation = () => {
     navigator.geolocation.getCurrentPosition((pos) => {
@@ -38,8 +40,12 @@ export default function RootLayout({
           <UserLocationContext.Provider
             value={{ userLocation, setUserLocation }}
           >
-            <HeaderNavBar />
-            {children}
+            <SelectedBusinessContext.Provider
+              value={{ selectedBusiness, setSelectedBusiness }}
+            >
+              <HeaderNavBar />
+              {children}
+            </SelectedBusinessContext.Provider>
           </UserLocationContext.Provider>
         </SessionProvider>
       </body>

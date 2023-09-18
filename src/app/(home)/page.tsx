@@ -61,7 +61,7 @@ export default function Home() {
         <RatingSelect />
       </div>
       <div className="col-span-3">
-        <GoogleMapView />
+        <GoogleMapView businesses={businesses} />
         <div className="relative md:absolute w-[90%] md:w-[71%] ml-6 md:m1-10 bottom-36 md:bottom-3">
           {!loading ? (
             <BusinessList businesses={businesses} />
