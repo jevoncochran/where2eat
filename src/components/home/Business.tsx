@@ -1,15 +1,83 @@
-import React from "react";
+import { useContext, useEffect, useState } from "react";
 import Image from "next/image";
+import { UserLocationContext } from "@/context/UserLocationContext";
 
 interface BusinessProps {
   business: any;
+  showDirections: boolean;
 }
 
-const Business = ({ business }: BusinessProps) => {
+const Business = ({ business, showDirections = false }: BusinessProps) => {
+  const { userLocation } = useContext(UserLocationContext);
+
+  const [distance, setDistance] = useState<number | null>(null);
+
   const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
   const photoRef = business?.photos
     ? business?.photos[0].photo_reference
     : null;
+
+  // TODO: Move to utils folder
+  const getPlural = (num: number) => {
+    if (num === 1) {
+      return null;
+    } else {
+      return "s";
+    }
+  };
+
+  const onDirectionClick = () => {
+    window.open(
+      "https://www.google.com/maps/dir/?api=1&origin=" +
+        userLocation.lat +
+        "," +
+        userLocation.lng +
+        "&destination=" +
+        business.geometry.location.lat +
+        "," +
+        business.geometry.location.lng +
+        "&travelmode=driving"
+    );
+  };
+
+  const calculateDistance = (
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number
+  ) => {
+    const earthRadius = 6371; // in kilometers
+
+    const degToRad = (deg: number) => {
+      return deg * (Math.PI / 180);
+    };
+
+    const dLat = degToRad(lat2 - lat1);
+    const dLon = degToRad(lon2 - lon1);
+
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(degToRad(lat1)) *
+        Math.cos(degToRad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    const distance = earthRadius * c;
+
+    setDistance(distance.toFixed(1));
+    return distance.toFixed(2); // Return the distance with 2 decimal places
+  };
+
+  useEffect(() => {
+    calculateDistance(
+      business.geometry.location.lat,
+      business.geometry.location.lng,
+      userLocation.lat,
+      userLocation.lng
+    );
+  }, []);
 
   return (
     <div
@@ -60,6 +128,21 @@ const Business = ({ business }: BusinessProps) => {
               hover:text-white
               hover:bg-blue-500' onClick={()=>onDirectionClick()} >Get Direction</span></h2>
             </div>:null} */}
+      {showDirections && (
+        <div className="border-t-[1px] p-1 mt-1">
+          {distance && (
+            <h2 className="text-[#0075ff] flex justify-between">
+              {`${distance} mile${getPlural(distance)} away`}
+              <span
+                className="border-[1px] p-1 rounded-full border-blue-500 hover:text-white hover:bg-blue-500"
+                onClick={onDirectionClick}
+              >
+                Get directions
+              </span>
+            </h2>
+          )}
+        </div>
+      )}
     </div>
   );
 };
