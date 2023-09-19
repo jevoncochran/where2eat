@@ -28,7 +28,7 @@ const Marker = ({ business }: MarkerProps) => {
           mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
         >
           <div className="ml-[-90px] mt-[-200px]">
-            <Business business={business} />
+            <Business business={business} showDirections />
           </div>
         </OverlayView>
       ) : null}

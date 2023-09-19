@@ -7,6 +7,7 @@ import {
   MarkerF,
 } from "@react-google-maps/api";
 import Marker from "./Marker";
+import { SelectedBusinessContext } from "@/context/SelectedBusinessContext";
 
 interface GoogleMapViewProps {
   businesses: any[];
@@ -14,6 +15,7 @@ interface GoogleMapViewProps {
 
 const GoogleMapView = ({ businesses }: GoogleMapViewProps) => {
   const { userLocation, setUserLocation } = useContext(UserLocationContext);
+  const { selectedBusiness } = useContext(SelectedBusinessContext);
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -30,6 +32,14 @@ const GoogleMapView = ({ businesses }: GoogleMapViewProps) => {
     lng: -122.271111,
   };
 
+  const getMapCenter = () => {
+    if (selectedBusiness) {
+      return selectedBusiness.geometry.location;
+    } else {
+      return userLocation;
+    }
+  };
+
   if (!isLoaded) return null;
 
   return (
@@ -39,7 +49,7 @@ const GoogleMapView = ({ businesses }: GoogleMapViewProps) => {
       >
         <GoogleMap
           mapContainerStyle={mapContainerStyle}
-          center={userLocation}
+          center={getMapCenter()}
           zoom={15}
         >
           <MarkerF
